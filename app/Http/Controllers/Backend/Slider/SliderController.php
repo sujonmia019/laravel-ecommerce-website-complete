@@ -114,6 +114,52 @@ class SliderController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $image = Slider::findOrFail($id);
+        $unlink = $image->image;
+        if($unlink){
+            unlink(public_path('frontend/images/slider/').$unlink);
+            $Delete = Slider::findOrFail($id)->delete();
+            if($Delete){
+                $notification = array(
+                    'message'   =>  'Slider deleted successfull:)',
+                    'alert-type'    =>  'success'
+                );
+    
+                return redirect()->route('slider.index')->with($notification);
+            }
+        }
+        
     }
+
+    // Pending Slider 
+    public function pending($id){
+        $Pending = Slider::findOrFail($id)->update([
+            'status'    =>  0
+        ]);
+        if($Pending){
+            $notification = array(
+                'message'   =>  'Slider pending successfull:)',
+                'alert-type'    =>  'success'
+            );
+
+            return redirect()->route('slider.index')->with($notification);
+        }
+    }
+
+    // Approved Slider 
+    public function approved($id){
+        $Approved = Slider::findOrFail($id)->update([
+            'status'    =>  1
+        ]);
+        if($Approved){
+            $notification = array(
+                'message'   =>  'Slider approved successfull:)',
+                'alert-type'    =>  'success'
+            );
+
+            return redirect()->route('slider.index')->with($notification);
+        }
+    }
+
+
 }
